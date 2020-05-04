@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="Хранилище PaymentModelContainer" CdmEntityContainer="PaymentEntities">
+    <EntitySetMapping Name="Bill">
+      <EntityTypeMapping TypeName="PaymentModel.Bill">
+        <MappingFragment StoreEntitySet="Bill">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Detail" ColumnName="Detail" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PayDone">
+      <EntityTypeMapping TypeName="PaymentModel.PayDone">
+        <MappingFragment StoreEntitySet="PayDone">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="BillId" ColumnName="BillId" />
+          <ScalarProperty Name="Service" ColumnName="Service" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PayType">
+      <EntityTypeMapping TypeName="PaymentModel.PayType">
+        <MappingFragment StoreEntitySet="PayType">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PayDoneId" ColumnName="PayDoneId" />
+          <ScalarProperty Name="Method" ColumnName="Method" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PrepForPay">
+      <EntityTypeMapping TypeName="PaymentModel.PrepForPay">
+        <MappingFragment StoreEntitySet="PrepForPay">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PayTypeId" ColumnName="PayTypeId" />
+          <ScalarProperty Name="Total" ColumnName="Total" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

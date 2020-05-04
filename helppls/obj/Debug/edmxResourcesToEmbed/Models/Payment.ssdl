@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище PaymentModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Bill">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Detail" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="PayDone">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BillId" Type="int" Nullable="false" />
+    <Property Name="Service" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PayType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PayDoneId" Type="int" Nullable="false" />
+    <Property Name="Method" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PrepForPay">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PayTypeId" Type="int" Nullable="false" />
+    <Property Name="Total" Type="money" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_PayDone_ToBill">
+    <End Role="Bill" Type="Self.Bill" Multiplicity="1" />
+    <End Role="PayDone" Type="Self.PayDone" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Bill">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PayDone">
+        <PropertyRef Name="BillId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PayType_ToPayDone">
+    <End Role="PayDone" Type="Self.PayDone" Multiplicity="1" />
+    <End Role="PayType" Type="Self.PayType" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PayDone">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PayType">
+        <PropertyRef Name="PayDoneId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PrepForPay_ToPayType">
+    <End Role="PayType" Type="Self.PayType" Multiplicity="1" />
+    <End Role="PrepForPay" Type="Self.PrepForPay" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PayType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PrepForPay">
+        <PropertyRef Name="PayTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Хранилище PaymentModelContainer">
+    <EntitySet Name="Bill" EntityType="Self.Bill" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PayDone" EntityType="Self.PayDone" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PayType" EntityType="Self.PayType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PrepForPay" EntityType="Self.PrepForPay" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_PayDone_ToBill" Association="Self.FK_PayDone_ToBill">
+      <End Role="Bill" EntitySet="Bill" />
+      <End Role="PayDone" EntitySet="PayDone" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PayType_ToPayDone" Association="Self.FK_PayType_ToPayDone">
+      <End Role="PayDone" EntitySet="PayDone" />
+      <End Role="PayType" EntitySet="PayType" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PrepForPay_ToPayType" Association="Self.FK_PrepForPay_ToPayType">
+      <End Role="PayType" EntitySet="PayType" />
+      <End Role="PrepForPay" EntitySet="PrepForPay" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

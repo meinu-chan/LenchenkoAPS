@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище PaymentModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Bill">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Detail" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PayDone">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BillId" Type="int" Nullable="false" />
+          <Property Name="Service" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PayType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PayDoneId" Type="int" Nullable="false" />
+          <Property Name="Method" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PrepForPay">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PayTypeId" Type="int" Nullable="false" />
+          <Property Name="Total" Type="money" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_PayDone_ToBill">
+          <End Role="Bill" Type="Self.Bill" Multiplicity="1" />
+          <End Role="PayDone" Type="Self.PayDone" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bill">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PayDone">
+              <PropertyRef Name="BillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PayType_ToPayDone">
+          <End Role="PayDone" Type="Self.PayDone" Multiplicity="1" />
+          <End Role="PayType" Type="Self.PayType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PayDone">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PayType">
+              <PropertyRef Name="PayDoneId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PrepForPay_ToPayType">
+          <End Role="PayType" Type="Self.PayType" Multiplicity="1" />
+          <End Role="PrepForPay" Type="Self.PrepForPay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PayType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PrepForPay">
+              <PropertyRef Name="PayTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище PaymentModelContainer">
+          <EntitySet Name="Bill" EntityType="Self.Bill" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PayDone" EntityType="Self.PayDone" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PayType" EntityType="Self.PayType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PrepForPay" EntityType="Self.PrepForPay" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_PayDone_ToBill" Association="Self.FK_PayDone_ToBill">
+            <End Role="Bill" EntitySet="Bill" />
+            <End Role="PayDone" EntitySet="PayDone" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PayType_ToPayDone" Association="Self.FK_PayType_ToPayDone">
+            <End Role="PayDone" EntitySet="PayDone" />
+            <End Role="PayType" EntitySet="PayType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PrepForPay_ToPayType" Association="Self.FK_PrepForPay_ToPayType">
+            <End Role="PayType" EntitySet="PayType" />
+            <End Role="PrepForPay" EntitySet="PrepForPay" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PaymentModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Bill">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Detail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PayDone" Relationship="Self.FK_PayDone_ToBill" FromRole="Bill" ToRole="PayDone" />
+        </EntityType>
+        <EntityType Name="PayDone">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BillId" Type="Int32" Nullable="false" />
+          <Property Name="Service" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Bill" Relationship="Self.FK_PayDone_ToBill" FromRole="PayDone" ToRole="Bill" />
+          <NavigationProperty Name="PayType" Relationship="Self.FK_PayType_ToPayDone" FromRole="PayDone" ToRole="PayType" />
+        </EntityType>
+        <EntityType Name="PayType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PayDoneId" Type="Int32" Nullable="false" />
+          <Property Name="Method" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="PayDone" Relationship="Self.FK_PayType_ToPayDone" FromRole="PayType" ToRole="PayDone" />
+          <NavigationProperty Name="PrepForPay" Relationship="Self.FK_PrepForPay_ToPayType" FromRole="PayType" ToRole="PrepForPay" />
+        </EntityType>
+        <EntityType Name="PrepForPay">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PayTypeId" Type="Int32" Nullable="false" />
+          <Property Name="Total" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="PayType" Relationship="Self.FK_PrepForPay_ToPayType" FromRole="PrepForPay" ToRole="PayType" />
+        </EntityType>
+        <Association Name="FK_PayDone_ToBill">
+          <End Role="Bill" Type="Self.Bill" Multiplicity="1" />
+          <End Role="PayDone" Type="Self.PayDone" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bill">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PayDone">
+              <PropertyRef Name="BillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PayType_ToPayDone">
+          <End Role="PayDone" Type="Self.PayDone" Multiplicity="1" />
+          <End Role="PayType" Type="Self.PayType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PayDone">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PayType">
+              <PropertyRef Name="PayDoneId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PrepForPay_ToPayType">
+          <End Role="PayType" Type="Self.PayType" Multiplicity="1" />
+          <End Role="PrepForPay" Type="Self.PrepForPay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PayType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PrepForPay">
+              <PropertyRef Name="PayTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PaymentEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Bill" EntityType="Self.Bill" />
+          <EntitySet Name="PayDone" EntityType="Self.PayDone" />
+          <EntitySet Name="PayType" EntityType="Self.PayType" />
+          <EntitySet Name="PrepForPay" EntityType="Self.PrepForPay" />
+          <AssociationSet Name="FK_PayDone_ToBill" Association="Self.FK_PayDone_ToBill">
+            <End Role="Bill" EntitySet="Bill" />
+            <End Role="PayDone" EntitySet="PayDone" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PayType_ToPayDone" Association="Self.FK_PayType_ToPayDone">
+            <End Role="PayDone" EntitySet="PayDone" />
+            <End Role="PayType" EntitySet="PayType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PrepForPay_ToPayType" Association="Self.FK_PrepForPay_ToPayType">
+            <End Role="PayType" EntitySet="PayType" />
+            <End Role="PrepForPay" EntitySet="PrepForPay" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище PaymentModelContainer" CdmEntityContainer="PaymentEntities">
+          <EntitySetMapping Name="Bill">
+            <EntityTypeMapping TypeName="PaymentModel.Bill">
+              <MappingFragment StoreEntitySet="Bill">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Detail" ColumnName="Detail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PayDone">
+            <EntityTypeMapping TypeName="PaymentModel.PayDone">
+              <MappingFragment StoreEntitySet="PayDone">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BillId" ColumnName="BillId" />
+                <ScalarProperty Name="Service" ColumnName="Service" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PayType">
+            <EntityTypeMapping TypeName="PaymentModel.PayType">
+              <MappingFragment StoreEntitySet="PayType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="PayDoneId" ColumnName="PayDoneId" />
+                <ScalarProperty Name="Method" ColumnName="Method" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PrepForPay">
+            <EntityTypeMapping TypeName="PaymentModel.PrepForPay">
+              <MappingFragment StoreEntitySet="PrepForPay">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="PayTypeId" ColumnName="PayTypeId" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
