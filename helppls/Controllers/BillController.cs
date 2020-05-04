@@ -9,6 +9,7 @@ using System.Web.Http;
 
 namespace helppls.Controllers
 {
+    [Authorize]
     public class BillController : ApiController
     {
         private PaymentEntities db = new PaymentEntities();
